@@ -5,6 +5,7 @@ const resumeButton=document.querySelector('.resume');
 const restartButton=document.querySelector('.restart');
 const leaderboard=document.querySelector('.leaderboard');
 const leaderboardButtons=document.querySelectorAll('.leaderboardButton');
+const scoreBox=document.querySelector('.scoreBox');
 const closeButton = document.querySelector('.close');
 const scoreText = document.querySelector('.score p');
 const bulletsLeftText = document.querySelector('.bulletsLeft p');
@@ -48,6 +49,7 @@ let bulletsLeft = 30;
 let mousePos = { x: 0, y: 0 };
 const bulletNetVelocity = 10;
 const gravityBullet = 0.17;
+const rect = canvas.getBoundingClientRect();
 const gravity = 0.5;
 let isMouseDown = false;
 let bulletLoaded = true;
@@ -868,6 +870,11 @@ function loadBullet(interval){
     },interval);
 }
 
+function placeElements(){
+    scoreBox.style.left = `${rect.left + 980}px`;
+    scoreBox.style.top = `${rect.top + 8}px`;
+}
+
 function starSound(){
     const audio = new Audio();
     audio.src = '../sounds/star.mp3';
@@ -906,6 +913,7 @@ function zombieGrowl(){
 startGame();
 drawZombies(zombieNumber,zombies,Zombies); //draws zombies at the start of the game
 animate();
+placeElements();
 setInterval(zombieBlockDestroy,3000);
 setInterval(zombieSurvivorAttack,2500);
 pauseFunc();

@@ -1,15 +1,17 @@
 /* eslint-disable default-case */
-//Hacker++ Mode
+// Hacker++ Mode
 const pauseButton=document.querySelector('.pause');
 const resumeButton=document.querySelector('.resume');
 const restartButton=document.querySelector('.restart');
 const leaderboard=document.querySelector('.leaderboard');
 const leaderboardButtons=document.querySelectorAll('.leaderboardButton');
+const scoreBox=document.querySelector('.scoreBox');
 const closeButton = document.querySelector('.close');
 const scoreText = document.querySelector('.score p');
 const bulletsLeftText = document.querySelector('.bulletsLeft p');
 const zombiesKilledText = document.querySelector('.zombiesKilled p');
 const infoText = document.querySelector('.powerUpInfo');
+const popUp = document.querySelector('.popUp');
 const popUpText2 = document.querySelector('.popUp2 p');
 const restriction=document.querySelector('.restriction');
 const username=document.querySelector('.username');
@@ -58,6 +60,7 @@ let mousePos = { x: 0, y: 0 };
 const bulletNetVelocity = 10;
 const gravityBullet = 0.17;
 const gravity = 0.5;
+const rect = canvas.getBoundingClientRect();
 let isMouseDown = false;
 let bulletLoaded = true;
 let isRecoil = false;
@@ -1035,7 +1038,7 @@ class ProjectionLine{
 let projectionLine;
 
 function handleBulletShoot() {
-    if (bulletsLeft > 0 && bulletLoaded){
+    if (bulletsLeft > 0 && bulletLoaded) {
         isRecoil = true;
         let newBullet;
         switch (weapon) {
@@ -1115,7 +1118,6 @@ function handleKeyUp(event) {
 }
 
 function handleMouseMove(event) {
-    const rect = canvas.getBoundingClientRect();
     mousePos.x = event.clientX - rect.left;
     mousePos.y = event.clientY - rect.top;
 }
@@ -1611,6 +1613,20 @@ function loadBullet(interval){
     },interval);
 }
 
+function placeElements(){
+    scoreBox.style.left = `${rect.left + 980}px`;
+    scoreBox.style.top = `${rect.top + 8}px`;
+
+    weaponBox.style.left = `${rect.left + 355}px`;
+    weaponBox.style.top = `${rect.top + 472}px`;
+
+    infoText.style.left = `${rect.left + 390}px`;
+    infoText.style.top = `${rect.top + 10}px`;
+
+    popUp.style.left = `${rect.left + 390}px`;
+    popUp.style.top = `${rect.top + 10}px`;
+}
+
 function starSound(){
     const audio = new Audio();
     audio.src = '../sounds/star.mp3';
@@ -1651,6 +1667,7 @@ drawZombies(zombieNumber,zombies,Zombies); //draws zombies at the start of the g
 drawZombies(climberZombiesNumber,climberZombies,ClimberZombies);
 drawZombies(passThroughZombiesNumber,passThroughZombies,PassThroughZombies);
 animate();
+placeElements();
 setInterval(zombieBlockDestroy,3000);
 setInterval(zombieSurvivorAttack,2500);
 switchWeapon();

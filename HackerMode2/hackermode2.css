@@ -16,8 +16,6 @@ canvas{
 }
 .scoreBox {
     position: absolute;
-    top: 8px;
-    left: 1000px;
     background-color: #1a213098;
     padding: 10px;
     border-radius: 8px;
@@ -251,8 +249,6 @@ canvas{
 }
 .weapons{
     position: absolute;
-    top: 473px;
-    left: 355px;
     background-color: transparent;
     padding: 10px;
     height: 50px;
@@ -397,8 +393,6 @@ section{
 }
 .powerUpInfo{
     position: absolute;
-    left: 390px;
-    top: 10px;
     height: 30px;
     width: 500px;
     background-color: #83b5ffe6;
@@ -416,8 +410,6 @@ section{
 }
 .popUp{
     position: absolute;
-    left:390px;
-    top:10px;
     height:76px;
     width:500px;
     background-color: transparent;

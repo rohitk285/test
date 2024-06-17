@@ -16,8 +16,6 @@ canvas{
 }
 .scoreBox {
     position: absolute;
-    top: 8px;
-    left: 1000px;
     background-color: #1a213098;
     padding: 10px;
     border-radius: 8px;
