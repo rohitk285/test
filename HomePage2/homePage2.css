@@ -1,0 +1,75 @@
+body{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+    background-image: linear-gradient(135deg, white, lightgreen, darkblue);
+}
+h1{
+    font-size: 70px;
+    font-family: "Russo One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color:rgba(20, 86, 161, 0.96);
+    transform: translateY(-40px);
+}
+h2{
+    font-size: 40px;
+    font-family: "Russo One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color:rgba(20, 86, 161, 0.96);
+    transform: translateY(-100px);
+}
+.container{
+    height:350px;
+    width:90%;
+    background-color: transparent;
+    transform: translateY(-115px); 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+.box1, .box2, .box3{
+    height: 80px;
+    width:100%;
+    background-color: #100e0ee5;
+    border-radius: 50px;
+    display: flex;
+    justify-content:space-around;
+    align-items: center;
+    border: 3px solid rgb(244, 244, 20);
+}
+.box1:hover, .box2:hover, .box3:hover{
+    box-shadow: 1px 1px 3px 5px rgba(231, 240, 54, 0.353); 
+}
+.box1 p, .box2 p, .box3 p{
+    font-size: 70px;
+    font-family: "VT323", monospace;
+    font-weight: 400;
+    font-style: normal;
+    color:rgb(14, 239, 33);
+    transform: translateX(-90px);
+}
+button{
+    height:60px;
+    width:120px;
+    border-radius:30px;
+    font-size: 28px;
+    transform: translateX(70px);
+    font-family: "VT323", monospace;
+    font-weight: 600;
+    font-style: normal;
+    color:rgb(18, 194, 18);
+    background-color: black;
+    border: 3px solid green;
+}
+button:hover{
+    background-color: rgb(1, 1, 32);
+    box-shadow: 1px 1px 3px 5px rgb(164, 182, 4);
+}
+.play3{
+    transform: translateX(57px);
+}

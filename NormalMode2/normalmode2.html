@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="normalmode2.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Permanent+Marker&family=Rajdhani:wght@300;400;500;600;700&family=Roboto:ital,wght@0,400;1,300&family=Russo+One&family=Salsa&family=Satisfy&family=VT323&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+    <title>Last Stand</title>
+</head>
+<body>
+    <canvas></canvas>
+
+    <div class="scoreBox">
+        <div class="score"><p>Score : 00</p></div>
+        <div class="bulletsLeft"><p>Bullets Left : 30</p></div>
+        <div class="zombiesKilled"><p>Zombies Killed : 00</p></div>
+        <button class="leaderboardButton">See Leaderboard</button>
+        <button class="pause">Pause</button>
+    </div>
+
+    <div class="blacken1">
+        <div class="pausebox">
+            <div class="text"><h1>Game Paused</h1></div>
+            <div class="buttons">
+            <button class="resume">Resume</button>
+            <button class="restart">Restart</button>
+        </div>
+        </div>
+    </div>
+
+    <div class="blacken2">
+        <div class="countdown"></div>
+    </div>
+
+    <div class="blacken3">
+        <div class="startBox">
+            <h1>LAST STAND</h1>
+            <label for="username">Enter your username</label>
+            <input type="text" class="username" name="username" minlength="4" required>
+            <p class="restriction">Username must contain at least 4 characters</p>
+            <button type="submit" class="start">START</button>
+        </div>
+    </div>
+
+    <div class="blacken4">
+        <div class="gameOverBox">
+            <h1>Game Over</h1>
+            <p>Your Score : </p>
+            <button class="leaderboardButton">See Leaderboard</button>
+            <button class="playAgain">Play Again</button>
+        </div>
+    </div>
+
+    <div class="blacken5">
+        <div class="round"></div>
+    </div>
+
+    <div class="blacken6">
+        <div class="leaderboard">
+            <h1>Leaderboard</h1>
+        </div>
+        <button class="close">CLOSE</button>
+    </div>
+
+    <script src="normalmode2.js"></script>
+</body>
+</html>

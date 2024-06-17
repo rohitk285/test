@@ -1,0 +1,445 @@
+body{
+    margin:0;
+    overflow: hidden;
+    display: block;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height:100vh;
+}
+canvas{
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.scoreBox {
+    position: absolute;
+    top: 8px;
+    left: 1000px;
+    background-color: #1a213098;
+    padding: 10px;
+    border-radius: 8px;
+    height: 170px;
+    width: 230px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+.score,.bulletsLeft,.zombiesKilled{
+    height: 25px;
+    width:230px;
+    background-color: #83b5ffe6;
+    border-radius: 3px;
+    transform: translateY(-5px);
+}
+.score p,.bulletsLeft p,.zombiesKilled p{
+    font-family: "VT323", monospace;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 20px;
+    color:black;
+    transform: translate(8px,-18px);
+}
+.scoreBox .leaderboardButton,.pause{
+    height:40px;
+    width:230px;
+    font-size: 22px;
+    border:2px solid #6ec599;
+    border-radius: 10px;
+    background-color: #5A72A0;
+    font-family: "Russo One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color:rgb(8, 8, 8);
+}
+.scoreBox .leaderboardButton:hover,.pause:hover{
+    box-shadow: 0.5px 0.5px 1.5px 2.5px #a6eeca;
+}
+.blacken1,.blacken2,.blacken3,.blacken4,.blacken5,.blacken6{
+    height:100vh;
+    width: 100%;
+    background-color: #1515158e;
+    position: absolute;
+    visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.blacken3{
+    visibility: visible;
+}
+.pausebox,.gameOverBox{
+    height:200px;
+    width:310px;
+    border-radius: 10px;
+    background-color: #90d26def; 
+    border: 4px solid #e18708;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.pausebox h1,.gameOverBox h1,.leaderboard h1{
+    transform: translateY(-20px);
+    font-family: "Creepster", system-ui;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 45px;
+    letter-spacing: 1px;
+    color:#114232;
+}
+.resume,.playAgain,.restart,.close,.gameOverBox .leaderboardButton{
+    height:60px;
+    width:140px;
+    text-align: center;
+    border-radius: 8px;
+    background-color: #FF9800;
+    border: 2px solid rgb(2, 88, 2);
+    border-radius: 10px;
+    font-family: "Creepster", system-ui;
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: 1px;
+    font-size: 32px;
+    transform: translateY(-25px);
+}
+.gameOverBox{
+    height: 220px;
+}
+.close{
+    height:35px;
+    font-size: 25px;
+    transform: translate(-300px,205px);
+}
+.resume:hover,.playAgain:hover,.restart:hover,
+.close:hover,.gameOverBox .leaderboardButton:hover{
+    box-shadow: 1px 1px 3px 5px #4cb216ef;
+}
+.gameOverBox .leaderboardButton{
+    font-size: 20px;
+    width: 180px;
+    transform: translateY(-95px);
+}
+.leaderboard{
+    height:450px;
+    width:600px;
+    border-radius: 10px;
+    background-color: #90d26def; 
+    border: 4px solid #e18708;
+    transform: translateX(75px);
+}
+.leaderboard h1{
+    text-align: center;
+    font-size: 35px;
+    text-decoration: 3px dashed rgb(178, 31, 31) underline;
+}
+.container{
+    background-color: transparent;
+    height: 360px;
+    width: 580px;
+    transform: translate(10px,-42px);
+}
+.container p{
+    text-align: center;
+    color: black;
+    font-family: "Russo One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 20px;
+    margin-bottom: 0px;
+    margin-top: 2px;
+}
+.countdown{
+    background-color: transparent;
+    font-size: 250px;
+    color:orange;
+    font-family: "Salsa", cursive;
+    font-weight: 400;
+    font-style: normal;
+}
+.round{
+    background-color: transparent;
+    font-size: 150px;
+    color:orange;
+    font-family: "Creepster", system-ui;
+    font-weight: 400;
+    font-style: normal;
+}
+.startBox{
+    height : 300px;
+    width:500px;
+    background-color: #90d26def;
+    border-radius: 15px;
+    border: 3px solid #e18708;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.startBox h1{
+    color:#095202;
+    font-family: "Creepster", system-ui;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 70px;
+    transform: translateY(-40px);
+}
+.start{
+    height:60px;
+    width:140px;
+    background-color: #FF9800;
+    border: 2px solid rgb(2, 88, 2);
+    border-radius: 10px;
+    color:black;
+    text-align: center;
+    font-family: "Creepster", system-ui;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 40px;
+    transform: translateY(-55px);
+}
+.start:hover{
+    box-shadow: 1px 1px 3px 5px #4cb216ef;
+}
+.startBox label{
+    color:#000;
+    font-size: 20px;
+    transform: translateY(-80px);
+    font-family: "Russo One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+.username{
+    height:30px;
+    width:450px;
+    font-size: 20px;
+    text-align: center;
+    border-radius: 15px;
+    background-color: #cff1a4;
+    border: 2px solid #000;
+    transform: translateY(-60px);
+    font-family: "Russo One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+.restriction{
+    font-size: 15px;
+    color:red;
+    transform: translate(-80px,-70px);
+    visibility: hidden;
+}
+.gameOverBox h1{
+    color:rgb(211, 34, 34);
+    text-decoration: underline dashed orangered;
+}
+.gameOverBox p{
+    transform: translateY(-70px);
+    font-family: "Creepster", system-ui;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 35px;
+    letter-spacing: 1px;
+    color:rgb(211, 34, 34);
+}
+.playAgain{
+    height : 70px;
+    font-size: 28px;
+    transform: translateY(-85px);
+}
+.weapons{
+    position: absolute;
+    top: 473px;
+    left: 355px;
+    background-color: transparent;
+    padding: 10px;
+    height: 50px;
+    width: 560px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    visibility: hidden;
+}
+.pistol, .ak47, .sniper{
+    height: 70px;
+    width: 180px;
+    background-color: #111a2f98;
+    border-radius: 8px;
+}
+.pistol:hover,.ak47:hover,.sniper:hover{
+    box-shadow: 0.5px 0.5px 1.5px 2.5px green;
+}
+.weapons h1,.weapons h2,.weapons h3{
+    text-align: center;
+    font-size: 25px;
+    transform: translateY(-16px);
+    font-family: "VT323", monospace;
+    font-weight: 600;
+    font-style: normal;
+}
+.weapons h2, .weapons h3{
+    font-family: "Satisfy", cursive;
+    font-weight: 600;
+    font-style: normal;
+}
+.weapons h2{
+    text-align: left;
+    transform: translate(4px,-42px);
+    font-size: 20px;
+}
+.weapons h3{
+    text-align: left;
+    transform: translate(4px,-100px);
+    font-size: 17px;
+}
+section{
+    position: absolute;
+    top:5px;
+    left: 50px;
+    height:26px;
+    width: 230px;
+    text-align: center;
+    font-size: 25px;
+    font-family: "VT323", monospace;
+    font-weight: 600;
+    font-style: normal;
+    letter-spacing: 1px;
+    background-color: #83b5ffe6;
+    border-radius: 5px;
+}
+.powerUps{
+    position: absolute;
+    top: 35px;
+    left: 40px;
+    background-color: #1a2130c7;
+    padding: 10px;
+    border-radius: 8px;
+    height: 110px;
+    width: 230px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+.damagePistol1{
+    background-color: rgb(248, 156, 156);
+    height: 12px;
+    width: 85px;
+    transform: translate(75px,-78px);
+}
+.damagePistol2{
+    background-color:rgb(242, 15, 15) ;
+    height: 12px;
+    width:28px;
+    transform: translate(75px,-90px);
+}
+.damageAK1{
+    background-color: rgb(248, 156, 156);
+    height: 12px;
+    width: 85px;
+    transform: translate(75px,-78px);
+}
+.damageAK2{
+    background-color:rgb(242, 15, 15) ;
+    height: 12px;
+    width:50px;
+    transform: translate(75px,-90px);
+}
+.damageSniper1{
+    background-color: rgb(248, 156, 156);
+    height: 12px;
+    width: 85px;
+    transform: translate(75px,-78px);
+}
+.damageSniper2{
+    background-color:rgb(242, 15, 15) ;
+    height: 12px;
+    width:70px;
+    transform: translate(75px,-90px);
+}
+.RFPistol1{
+    background-color: rgb(246, 246, 157);
+    height:12px;
+    width:85px;
+    transform: translate(90px,-135px);
+}
+.RFPistol2{
+    background-color: rgb(226, 226, 35);
+    height:12px;
+    width:60px;
+    transform: translate(90px,-147px);
+}
+.RFAK1{
+    background-color: rgb(246, 246, 157);
+    height:12px;
+    width:85px;
+    transform: translate(90px,-135px);
+}
+.RFAK2{
+    background-color: rgb(226, 226, 35);
+    height:12px;
+    width:42px;
+    transform: translate(90px,-147px);
+}
+.RFSniper1{
+    background-color: rgb(246, 246, 157);
+    height:12px;
+    width:85px;
+    transform: translate(90px,-135px);
+}
+.RFSniper2{
+    background-color: rgb(226, 226, 35);
+    height:12px;
+    width:22px;
+    transform: translate(90px,-147px);
+}
+.powerUpInfo{
+    position: absolute;
+    left: 390px;
+    top: 10px;
+    height: 30px;
+    width: 500px;
+    background-color: #83b5ffe6;
+    border-radius: 10px;
+    visibility: hidden;
+}
+.powerUpInfo p{
+    text-align: center;
+    color: black;
+    font-family: "VT323", monospace;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 24px;
+    transform: translateY(-22px);
+}
+.popUp{
+    position: absolute;
+    left:390px;
+    top:10px;
+    height:76px;
+    width:500px;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    visibility: hidden;
+}
+.popUp1,.popUp2{
+    height:35px;
+    width:500px;
+    background-color: #83b5ffe6;
+    border-radius: 8px;
+}
+.popUp1 p,.popUp2 p{
+    text-align: center;
+    color: rgb(238, 56, 56);
+    font-family: "VT323", monospace;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 30px;
+    transform: translateY(-30px);
+}
+
