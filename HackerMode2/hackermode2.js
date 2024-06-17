@@ -1354,7 +1354,7 @@ function handlePowerUps(){
         else if(powerUps % 4 === 0){
             popUpText2.innerText = 'You have got +20 health';
             if(healthBar.width <=65)
-                healthBar.width2 +=15;
+                healthBar.width2 +=20;
             else
                 healthBar.width2 = 80;
         }
