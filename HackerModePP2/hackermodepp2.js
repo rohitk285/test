@@ -1519,13 +1519,13 @@ function handleGameOver(){
         for(let i=0;i<array.length;i++){
             let n = array[i].score;
             if(i===0){
-                if(score >= n & !isAppended){
+                if(score >= n && !isAppended){
                     array.splice(0,0,{username:username.value, score:score});
                     isAppended = true;
                     break;
                 }
             }
-            if(i===array.length-1 & !isAppended){
+            if(i===array.length-1 && !isAppended){
                 if(score < n){
                     array.push({username:username.value, score:score});
                     isAppended = true;
