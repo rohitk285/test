@@ -1461,6 +1461,7 @@ function handleScoreBox(){
 function handleGameOver(){
     gamePaused = true;
     isGameOver = true;
+    let isAppended = false;
     gameOverSound();
     blackScreen4.style.visibility = 'visible';
     finalScore.innerText = `Your Score : ${score}`;
@@ -1471,20 +1472,23 @@ function handleGameOver(){
         for(let i=0;i<array.length;i++){
             let n = array[i].score;
             if(i===0){
-                if(score >= n){
+                if(score >= n & !isAppended){
                     array.splice(0,0,{username:username.value, score:score});
+                    isAppended = true;
                     break;
                 }
             }
-            if(i===array.length-1){
+            if(i===array.length-1 & !isAppended){
                 if(score < n){
                     array.push({username:username.value, score:score});
+                    isAppended = true;
                     break;
                 }
             }
             else{
-                if(score < n && score > array[i+1].score){
+                if(score <= n && score > array[i+1].score && !isAppended){
                     array.splice(i+1,0,{username:username.value, score:score});
+                    isAppended = true;
                     break;
                 }
             }
