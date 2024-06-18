@@ -46,6 +46,8 @@ canvas.height = 546;
 
 let gamePaused=true;
 let isGameOver = false;
+let isMouseDown = false;
+let bulletLoaded = true;
 let bigBlockSize=75;
 let score = 0;
 let roundNumber = 1;
@@ -54,15 +56,13 @@ let climberZombiesNumber = 2;
 let passThroughZombiesNumber = 1;
 let zombieSpeed = 0.15;
 let zombiesKilled = 0;
-let bulletsLeft = 30;
+let bulletsLeft = 20;
 let powerUps = 0;
 let mousePos = { x: 0, y: 0 };
 const bulletNetVelocity = 10;
 const gravityBullet = 0.17;
 const gravity = 0.5;
 const rect = canvas.getBoundingClientRect();
-let isMouseDown = false;
-let bulletLoaded = true;
 let weapon = 'pistol';
 let interval = {pistol: 910, ak47: 1310, sniper: 1960};
 let RFPistol = 60;
@@ -104,7 +104,7 @@ const platformHeight = platforms[0].position.y;
 class BackgroundObject{
     constructor({x,y,image}){
         this.position={x:x , y:y};
-        this.image=image;
+        this.image = image;
         this.width = image.width;
         this.height = image.height;
     }
@@ -797,14 +797,15 @@ class PistolBullet{
         this.image = image;
         this.shot = false;
         this.gravityBullet = gravityBullet;
+        this.angleBullet = 0;
     }
     draw(){
         if(this.shot){
-          let angleBullet = Math.atan2(this.velocity.y, this.velocity.x);
+          this.angleBullet = Math.atan2(this.velocity.y, this.velocity.x);
           c.save();  //saves the current state of the canvas
           //shifts the origin of canvas to the center of the bullet
           c.translate(this.position.x + this.width/2, this.position.y + this.height/2);
-          c.rotate(angleBullet);  //rotates the bullet
+          c.rotate(this.angleBullet);  //rotates the bullet
 
           if(mousePos.x > this.survivor.position.x + this.survivor.width/2)
                c.drawImage(this.image, -this.width/2-8, -this.height/2-6, this.width, this.height);
@@ -820,7 +821,6 @@ class PistolBullet{
         this.shot = true;
         const angle = Math.atan2(mousePos.y - (this.survivor.position.y + this.survivor.height/1.6),
             mousePos.x - (this.survivor.position.x + this.survivor.width / 2));
-
         this.velocity.x = Math.cos(angle)*bulletNetVelocity;   //Projectile motion formula
         this.velocity.y = Math.sin(angle)*bulletNetVelocity;                     
         
@@ -852,14 +852,15 @@ class Ak47Bullet{
         this.image = image;
         this.shot = false;
         this.gravityBullet = gravityBullet;
+        this.angleBullet = 0;
     }
     draw(){
         if(this.shot){
-          let angleBullet = Math.atan2(this.velocity.y, this.velocity.x);
+          this.angleBullet = Math.atan2(this.velocity.y, this.velocity.x);
           c.save();  //saves the current state of the canvas
           //shifts the origin of canvas to the center of the bullet
           c.translate(this.position.x + this.width/2, this.position.y + this.height/2);
-          c.rotate(angleBullet);  //rotates the bullet
+          c.rotate(this.angleBullet);  //rotates the bullet
 
           if(mousePos.x > this.survivor.position.x + this.survivor.width/2)
                c.drawImage(this.image, -this.width/2-8, -this.height/2-7, this.width, this.height);
@@ -907,14 +908,15 @@ class SniperBullet{
         this.image = image;
         this.shot = false;
         this.gravityBullet = gravityBullet;
+        this.angleBullet = 0;
     }
     draw(){
         if(this.shot){
-          let angleBullet = Math.atan2(this.velocity.y, this.velocity.x);
+          this.angleBullet = Math.atan2(this.velocity.y, this.velocity.x);
           c.save();  //saves the current state of the canvas
           //shifts the origin of canvas to the center of the bullet
           c.translate(this.position.x + this.width/2, this.position.y + this.height/2);
-          c.rotate(angleBullet);  //rotates the bullet
+          c.rotate(this.angleBullet);  //rotates the bullet
 
           if(mousePos.x > this.survivor.position.x + this.survivor.width/2)
                c.drawImage(this.image, -this.width/2-15, -this.height/2-2.5, this.width, this.height);
@@ -1023,6 +1025,7 @@ function handleBulletShoot() {
         bulletsLeft -= 1;
         handleScoreBox();
         gunShotSound();
+
     }
 }
 
@@ -1229,6 +1232,10 @@ function animate() {
     }
     healthBar.update({ x: survivor.position.x, y: survivor.position.y });
     handlePowerUps();
+    if(bulletsLeft === 0){    //Game over if bullets left is zero
+        handleGameOver();
+        setTimeout(()=>{alert('No Bullets Left');},1500);
+    }
     }
     requestAnimationFrame(animate);
 }
@@ -1273,6 +1280,10 @@ function handleCollision(bullets){
                 bullets.splice(bulletIndex,1);
                 break;
             }
+        }
+        if(isColliding(bullet,survivor) && bullet.angleBullet > 0){
+            healthBar.takeDamage();          //Survivor should be impacted when bullet
+            bullets.splice(bulletIndex,1);   //collides with it
         }
     });
 }
@@ -1591,8 +1602,20 @@ function starSound(){
 
 function gunShotSound(){
     const audio = new Audio();
-    audio.src = '../sounds/gunshot.mp3';
-    audio.volume = 0.9;
+    switch(weapon){
+        case 'pistol':
+            audio.src = '../sounds/pistolShot.mp3';
+            audio.volume = 0.9;
+            break;
+        case 'ak47':
+            audio.src = '../sounds/ak47Shot.mp3';
+            audio.volume = 0.3;
+            break;
+        case 'sniper':
+            audio.src = '../sounds/sniperShot.mp3';
+            audio.volume = 0.1;
+            break;
+    }
     audio.play();
 }
 
@@ -1624,7 +1647,7 @@ drawZombies(passThroughZombiesNumber,passThroughZombies,PassThroughZombies);
 animate();
 placeElements();
 setInterval(zombieBlockDestroy,3000);
-setInterval(zombieSurvivorAttack,2500);
+setInterval(zombieSurvivorAttack,2000);
 switchWeapon();
 pauseFunc();
 displayLeaderBoard();

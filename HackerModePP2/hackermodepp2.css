@@ -14,7 +14,40 @@ canvas{
     justify-content: center;
     align-items: center;
 }
-.scoreBox {
+.jetpackBox{
+    position: absolute;
+    background-color: #1a213098;
+    height: 150px;
+    width: 230px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.jetpackBox h1{
+    font-size: 30px;
+    text-align: center;
+    color:yellow;
+    transform: translateY(-5px);
+    visibility: visible;
+}
+.jetpackBox .timer{
+    font-size: 45px;
+    text-align: center;
+    color:yellow;
+    transform: translateY(-65px);
+    visibility: visible;
+}
+.jetpackBox .enableText{
+    padding: 4px;
+    font-size: 28px;
+    text-align: center;
+    color:yellow;
+    transform: translateY(-245px);
+    visibility: hidden;
+}
+.scoreBox{
     position: absolute;
     background-color: #1a213098;
     padding: 10px;
@@ -434,4 +467,3 @@ section{
     font-size: 30px;
     transform: translateY(-30px);
 }
-

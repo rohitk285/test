@@ -45,7 +45,7 @@ let roundNumber = 1;
 let zombieNumber = 2;
 let zombieSpeed = 0.15;
 let zombiesKilled = 0;
-let bulletsLeft = 30;
+let bulletsLeft = 20;
 let mousePos = { x: 0, y: 0 };
 const bulletNetVelocity = 10;
 const gravityBullet = 0.17;
@@ -266,18 +266,18 @@ class Zombies{
     }
     draw(){
         if(this.velocity.x > 0){
-            this.image = createImage(`../images2/zombieGirlRightIdle.png`);
+            this.image = createImage(`../images1/zombieGirlRightIdle.png`);
             c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
         }
         else if(this.velocity.x < 0){
-            this.image = createImage(`../images2/zombieGirlLeftIdle.png`);
+            this.image = createImage(`../images1/zombieGirlLeftIdle.png`);
             c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
         }
         else{
             if(this.facing === 'right')
-                this.image = createImage(`../images2/zombieGirlRightIdle.png`);
+                this.image = createImage(`../images1/zombieGirlRightIdle.png`);
             else
-                this.image = createImage(`../images2/zombieGirlLeftIdle.png`);
+                this.image = createImage(`../images1/zombieGirlLeftIdle.png`);
                 c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
         }
     }
@@ -663,6 +663,11 @@ function animate() {
     }
     
     healthBar.update({ x: survivor.position.x, y: survivor.position.y });
+
+    if(bulletsLeft === 0){
+        handleGameOver();
+        setTimeout(()=>{alert('No Bullets Left');},1500);
+    }
     }
 
     requestAnimationFrame(animate);
@@ -884,7 +889,7 @@ function starSound(){
 
 function gunShotSound(){
     const audio = new Audio();
-    audio.src = '../sounds/gunshot.mp3';
+    audio.src = '../sounds/pistolShot.mp3';
     audio.volume = 0.9;
     audio.play();
 }
@@ -915,7 +920,7 @@ drawZombies(zombieNumber,zombies,Zombies); //draws zombies at the start of the g
 animate();
 placeElements();
 setInterval(zombieBlockDestroy,3000);
-setInterval(zombieSurvivorAttack,2500);
+setInterval(zombieSurvivorAttack,2000);
 pauseFunc();
 displayLeaderBoard();
 handlePlayAgain();
