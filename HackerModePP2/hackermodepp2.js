@@ -882,14 +882,15 @@ class PistolBullet{
         this.image = image;
         this.shot = false;
         this.gravityBullet = gravityBullet;
+        this.angleBullet = 0;
     }
     draw(){
         if(this.shot){
-          let angleBullet = Math.atan2(this.velocity.y, this.velocity.x);
+          this.angleBullet = Math.atan2(this.velocity.y, this.velocity.x);
           c.save();  //saves the current state of the canvas
           //shifts the origin of canvas to the center of the bullet
           c.translate(this.position.x + this.width/2, this.position.y + this.height/2);
-          c.rotate(angleBullet);  //rotates the bullet
+          c.rotate(this.angleBullet);  //rotates the bullet
 
           if(mousePos.x > this.survivor.position.x + this.survivor.width/2)
                c.drawImage(this.image, -this.width/2-8, -this.height/2-6, this.width, this.height);
@@ -937,14 +938,15 @@ class Ak47Bullet{
         this.image = image;
         this.shot = false;
         this.gravityBullet = gravityBullet;
+        this.angleBullet = 0;
     }
     draw(){
         if(this.shot){
-          let angleBullet = Math.atan2(this.velocity.y, this.velocity.x);
+          this.angleBullet = Math.atan2(this.velocity.y, this.velocity.x);
           c.save();  //saves the current state of the canvas
           //shifts the origin of canvas to the center of the bullet
           c.translate(this.position.x + this.width/2, this.position.y + this.height/2);
-          c.rotate(angleBullet);  //rotates the bullet
+          c.rotate(this.angleBullet);  //rotates the bullet
 
           if(mousePos.x > this.survivor.position.x + this.survivor.width/2)
                c.drawImage(this.image, -this.width/2-8, -this.height/2-7, this.width, this.height);
@@ -992,14 +994,15 @@ class SniperBullet{
         this.image = image;
         this.shot = false;
         this.gravityBullet = gravityBullet;
+        this.angleBullet = 0;
     }
     draw(){
         if(this.shot){
-          let angleBullet = Math.atan2(this.velocity.y, this.velocity.x);
+          this.angleBullet = Math.atan2(this.velocity.y, this.velocity.x);
           c.save();  //saves the current state of the canvas
           //shifts the origin of canvas to the center of the bullet
           c.translate(this.position.x + this.width/2, this.position.y + this.height/2);
-          c.rotate(angleBullet);  //rotates the bullet
+          c.rotate(this.angleBullet);  //rotates the bullet
 
           if(mousePos.x > this.survivor.position.x + this.survivor.width/2)
                c.drawImage(this.image, -this.width/2-15, -this.height/2-2.5, this.width, this.height);
@@ -1371,6 +1374,10 @@ function handleCollision(bullets){
                 bullets.splice(bulletIndex,1);
                 break;
             }
+        }
+        if(isColliding(bullet,survivor) && bullet.angleBullet > 0){
+            healthBar.takeDamage();          //Survivor should be impacted when bullet
+            bullets.splice(bulletIndex,1);   //collides with it
         }
     });
 }
