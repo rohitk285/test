@@ -226,7 +226,7 @@ class HealthBar {
         this.width2 = 80;
     }
     takeDamage(){
-        this.width2 -= 2.5;
+        this.width2 -= 4;
         if(this.width2 <= 0)
             handleGameOver();
     }
@@ -1647,7 +1647,7 @@ drawZombies(passThroughZombiesNumber,passThroughZombies,PassThroughZombies);
 animate();
 placeElements();
 setInterval(zombieBlockDestroy,2000);
-setInterval(zombieSurvivorAttack,2000);
+setInterval(zombieSurvivorAttack,1500);
 switchWeapon();
 pauseFunc();
 displayLeaderBoard();

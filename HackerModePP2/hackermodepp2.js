@@ -227,7 +227,7 @@ class Survivor {
 
 const survivor = new Survivor();
 
-class HealthBar {
+class HealthBar{
     constructor() {
         this.position = { x:survivor.position.x + 2 , y:survivor.position.y - 15 };
         this.width = 80;
@@ -235,7 +235,7 @@ class HealthBar {
         this.width2 = 80;
     }
     takeDamage(){
-        this.width2 -= 2.5;
+        this.width2 -= 4;
         if(this.width2 <= 0)
             handleGameOver();
     }
@@ -1789,7 +1789,7 @@ animate();
 placeElements();
 jetpackCountdownFunc();
 setInterval(zombieBlockDestroy,2000);
-setInterval(zombieSurvivorAttack,2000);
+setInterval(zombieSurvivorAttack,1500);
 switchWeapon();
 pauseFunc();
 displayLeaderBoard();
