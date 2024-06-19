@@ -1448,8 +1448,8 @@ function handlePowerUps(){
         }
 
         else if(powerUps % 4 === 3){
-            popUpText2.innerText = 'You have 20 extra bullets';
-            bulletsLeft += 20;
+            popUpText2.innerText = 'You have 10 extra bullets';
+            bulletsLeft += 10;
         }
 
         else if(powerUps % 4 === 0){
@@ -1788,7 +1788,7 @@ drawZombies(passThroughZombiesNumber,passThroughZombies,PassThroughZombies);
 animate();
 placeElements();
 jetpackCountdownFunc();
-setInterval(zombieBlockDestroy,3000);
+setInterval(zombieBlockDestroy,2000);
 setInterval(zombieSurvivorAttack,2000);
 switchWeapon();
 pauseFunc();

@@ -919,7 +919,7 @@ startGame();
 drawZombies(zombieNumber,zombies,Zombies); //draws zombies at the start of the game
 animate();
 placeElements();
-setInterval(zombieBlockDestroy,3000);
+setInterval(zombieBlockDestroy,2000);
 setInterval(zombieSurvivorAttack,2000);
 pauseFunc();
 displayLeaderBoard();
