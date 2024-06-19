@@ -26,25 +26,44 @@ canvas{
     align-items: center;
 }
 .jetpackBox h1{
-    font-size: 30px;
+    font-family: "VT323", monospace;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 32px;
     text-align: center;
-    color:yellow;
+    color:#83b5ffe6;
     transform: translateY(-5px);
     visibility: visible;
 }
 .jetpackBox .timer{
-    font-size: 45px;
+    font-family: "VT323", monospace;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 65px;
     text-align: center;
-    color:yellow;
-    transform: translateY(-65px);
+    color:#83b5ffe6;
+    transform: translateY(-90px);
     visibility: visible;
 }
 .jetpackBox .enableText{
+    font-family: "VT323", monospace;
+    font-weight: 600;
+    font-style: normal;
     padding: 4px;
-    font-size: 28px;
+    font-size: 35px;
     text-align: center;
-    color:yellow;
-    transform: translateY(-245px);
+    color:#83b5ffe6;
+    transform: translateY(-305px);
+    visibility: hidden;
+}
+.jetpackCountdown{
+    font-family: "VT323", monospace;
+    font-weight: 600;
+    font-style: normal;
+    text-align: center;
+    color:#83b5ffe6;
+    font-size: 120px;
+    transform: translateY(-430px);
     visibility: hidden;
 }
 .scoreBox{

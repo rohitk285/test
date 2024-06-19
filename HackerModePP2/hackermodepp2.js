@@ -6,6 +6,7 @@ const restartButton=document.querySelector('.restart');
 const leaderboard=document.querySelector('.leaderboard');
 const leaderboardButtons=document.querySelectorAll('.leaderboardButton');
 const jetpackBox=document.querySelector('.jetpackBox');
+const jetpackCountdownBox = document.querySelector('.jetpackCountdown');
 const enableText=document.querySelector('.enableText');
 const timer=document.querySelector('.timer');
 const scoreBox=document.querySelector('.scoreBox');
@@ -53,7 +54,8 @@ let isMouseDown = false;
 let bulletLoaded = true;
 let isRecoil = false;
 let jetpackOn = false;
-let jetpackTimer = 11;
+let jetpackTimer = 61;
+let jetpackCountdown = 10;
 let bigBlockSize=75;
 let score = 0;
 let roundNumber = 1;
@@ -134,19 +136,19 @@ class Survivor {
         this.facing = 'right';
     }
     draw() {
-        if(this.velocity.x > 0){
+        if(this.velocity.x === 0 || jetpackOn){
+            if(this.facing === 'right')
+                this.image = createImage('../images2/survivorIdle/idleRight.png');
+            else
+                this.image = createImage('../images2/survivorIdle/idleLeft.png');
+            c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
+        }
+        else if(this.velocity.x > 0){
             this.image = createImage(`../images2/survivorRunRight/run${this.frame}.png`);
             c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
         }
         else if(this.velocity.x < 0){
             this.image = createImage(`../images2/survivorRunLeft/run${this.frame}.png`);
-            c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
-        }
-        else if(this.velocity.x === 0){
-            if(this.facing === 'right')
-                this.image = createImage('../images2/survivorIdle/idleRight.png');
-            else
-                this.image = createImage('../images2/survivorIdle/idleLeft.png');
             c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
         }
     }
@@ -307,17 +309,13 @@ class Jetpack{
            c.drawImage(this.imageRight, this.position.x, this.position.y, this.width, this.height);
         }
     }
-    lift(){
-        if(jetpackTimer === 0){
-            if(survivor.position.y >= canvas.height/8){
-                gravitySurvivor = 0;
-                survivor.velocity.y -= 0.06; 
-            }
-            else
-                survivor.velocity.y = 0; 
+    lift(){ 
+        if(jetpackOn){
+        survivor.velocity.y = (survivor.position.y >= canvas.height/8) ? survivor.velocity.y - 0.06 : 0;
         }
-    }
+    } 
     update(){
+        gravitySurvivor = jetpackOn ? 0 : 0.5;
         this.position.y = survivor.position.y + 82;
         this.draw(); 
     }
@@ -340,10 +338,7 @@ class Zombies{
         this.count = 0;
         this.frame = 1;
         this.colliding = false;
-        if(this.position.x >= survivor.position.x+survivor.width/2)
-            this.facing = 'left';
-        else
-            this.facing = 'right';
+        this.facing = (this.position.x >= survivor.position.x+survivor.width/2) ? 'left':'right';
     }
     takeDamage(){
         if(weapon === 'pistol')
@@ -450,10 +445,7 @@ class ClimberZombies{
         this.count = 0;
         this.frame = 1;
         this.onBlock = false; //default value
-        if(this.position.x >= survivor.position.x + survivor.width/2)
-            this.facing = 'left';
-        else
-            this.facing = 'right';
+        this.facing = (this.position.x >= survivor.position.x+survivor.width/2) ? 'left':'right';
     }
     takeDamage(){
         if(weapon === 'pistol')
@@ -505,7 +497,7 @@ class ClimberZombies{
         }
         if(this.frame > 10)
             this.frame = 1;
-    
+
         if(this.velocity.x > 0)
             this.facing = 'right';
         else if(this.velocity.x < 0)
@@ -1140,8 +1132,11 @@ function handleKeyDown(event) {
             keys.up = true;
             break;
         case 74:
-            if(jetpackTimer === 0)
+            if(jetpackTimer === 0 && !jetpackOn){
                jetpackOn = true;
+               jetpackSound();
+               jetpackCountdownFunc();
+            }
             break;
     }
 }
@@ -1322,6 +1317,7 @@ function animate() {
     }
     healthBar.update({ x: survivor.position.x, y: survivor.position.y });
     handlePowerUps();
+
     jetpack.update();
     if(jetpackOn)
         jetpack.lift();
@@ -1673,8 +1669,9 @@ function loadBullet(interval){
     },interval);
 }
 
-function jetpackCountdown(){
-    let jetpackId = setInterval(()=>{
+function jetpackCountdownFunc(){
+    if(!jetpackOn){
+    let jetpackId1 = setInterval(()=>{
         if(jetpackTimer > 0){
             if(!gamePaused){
             jetpackTimer--;
@@ -1685,9 +1682,32 @@ function jetpackCountdown(){
             document.querySelector('.jetpackBox h1').style.visibility = 'hidden';
             timer.style.visibility = 'hidden';
             enableText.style.visibility = 'visible';
-            clearInterval(jetpackId);
+            clearInterval(jetpackId1);
         }
     },1000);
+  }
+  else{
+    let jetpackId2 = setInterval(()=>{
+        if(jetpackCountdown > 0){
+            if(!gamePaused){
+                enableText.style.visibility ='hidden';
+                jetpackCountdownBox.style.visibility = 'visible';
+                jetpackCountdownBox.innerText = `${jetpackCountdown}`;
+                jetpackCountdown--;
+            }
+        }
+        else{
+            jetpackTimer = 11;
+            document.querySelector('.jetpackBox h1').style.visibility = 'visible';
+            timer.style.visibility = 'visible';
+            jetpackCountdownBox.style.visibility = 'hidden';
+            jetpackCountdown = 10;
+            jetpackOn = false;
+            clearInterval(jetpackId2);
+            jetpackCountdownFunc();
+        }
+    },1000);
+  }
 }
 
 function placeElements(){
@@ -1754,13 +1774,20 @@ function zombieGrowl(){
     audio.play();
 }
 
+function jetpackSound(){
+    const audio = new Audio();
+    audio.src = '../sounds/jetpackSound.mp3';
+    audio.volume = 0.5;
+    audio.play();
+}
+
 startGame();
 drawZombies(zombieNumber,zombies,Zombies); //draws zombies at the start of the game
 drawZombies(climberZombiesNumber,climberZombies,ClimberZombies);
 drawZombies(passThroughZombiesNumber,passThroughZombies,PassThroughZombies);
 animate();
 placeElements();
-jetpackCountdown();
+jetpackCountdownFunc();
 setInterval(zombieBlockDestroy,3000);
 setInterval(zombieSurvivorAttack,2000);
 switchWeapon();
