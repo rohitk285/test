@@ -1697,7 +1697,7 @@ function jetpackCountdownFunc(){
             }
         }
         else{
-            jetpackTimer = 11;
+            jetpackTimer = 61;
             document.querySelector('.jetpackBox h1').style.visibility = 'visible';
             timer.style.visibility = 'visible';
             jetpackCountdownBox.style.visibility = 'hidden';
