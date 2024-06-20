@@ -259,7 +259,7 @@ class TemporaryHealthBar{
         this.width2 = 80;
     }
     takeDamage(){
-        this.width2 -= 27;
+        this.width2 -= 20;
     }
     drawHealth(){
         c.fillStyle = 'rgb(239, 185, 108)';
@@ -1596,7 +1596,7 @@ function placeElements(){
 function starSound(){
     const audio = new Audio();
     audio.src = '../sounds/star.mp3';
-    audio.volume = 0.9;
+    audio.volume = 0.15;
     audio.play();
 }
 

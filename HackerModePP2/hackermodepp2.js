@@ -7,8 +7,11 @@ const leaderboard=document.querySelector('.leaderboard');
 const leaderboardButtons=document.querySelectorAll('.leaderboardButton');
 const jetpackBox=document.querySelector('.jetpackBox');
 const jetpackCountdownBox = document.querySelector('.jetpackCountdown');
-const enableText=document.querySelector('.enableText');
-const timer=document.querySelector('.timer');
+const AutoDefenseCountdownBox = document.querySelector('.autoDefenseCountdown');
+const enableText1=document.querySelector('.enableText1');
+const enableText2=document.querySelector('.enableText2');
+const timer1=document.querySelector('.timer1');
+const timer2=document.querySelector('.timer2');
 const scoreBox=document.querySelector('.scoreBox');
 const closeButton = document.querySelector('.close');
 const scoreText = document.querySelector('.score p');
@@ -54,8 +57,11 @@ let isMouseDown = false;
 let bulletLoaded = true;
 let isRecoil = false;
 let jetpackOn = false;
-let jetpackTimer = 61;
+let AutoDefenseOn = false;
+let jetpackTimer = 76;
 let jetpackCountdown = 10;
+let AutoDefenseTimer = 61;
+let AutoDefenseCountdown = 10;
 let bigBlockSize=75;
 let score = 0;
 let roundNumber = 1;
@@ -250,7 +256,7 @@ class HealthBar{
         c.fillStyle = 'rgb(7, 168, 7)';
         c.fillRect(this.position.x, this.position.y, this.width2, this.height);
     }
-    update({ x, y }) {
+    update({x, y}) {
         this.position.x = x+2;
         this.position.y = y-15;
         this.drawHealth();
@@ -268,7 +274,7 @@ class TemporaryHealthBar{
         this.width2 = 80;
     }
     takeDamage(){
-        this.width2 -= 27;
+        this.width2 -= 20;
     }
     drawHealth(){
         c.fillStyle = 'rgb(239, 185, 108)';
@@ -340,13 +346,18 @@ class Zombies{
         this.colliding = false;
         this.facing = (this.position.x >= survivor.position.x+survivor.width/2) ? 'left':'right';
     }
-    takeDamage(){
+    takeDamage(obj){
+        if(obj === 'bullet'){
         if(weapon === 'pistol')
            this.healthWidth2 -= 15;
         else if(weapon === 'ak47')
             this.healthWidth2 -= 25;
         else if(weapon === 'sniper')
             this.healthWidth2 -=45;
+    }
+        else{
+            this.healthWidth2 -= 12;
+        }
 
         if(this.healthWidth2 <= 0){
             score += 50;
@@ -673,6 +684,11 @@ class BigBlocks{
     }
     draw() {
         c.drawImage(this.image,this.position.x,this.position.y,bigBlockSize,bigBlockSize);
+        if(AutoDefenseOn){
+        c.lineWidth = 4;
+        c.strokeStyle = '#06D001';
+        c.strokeRect(this.position.x,this.position.y,this.width,this.height);
+        }
     }
     takeDamage(damage){
         this.healthWidth2 -= damage;
@@ -1131,13 +1147,19 @@ function handleKeyDown(event) {
         case 87:
             keys.up = true;
             break;
-        case 74:
+        case 78:
             if(jetpackTimer === 0 && !jetpackOn){
                jetpackOn = true;
                jetpackSound();
                jetpackCountdownFunc();
             }
             break;
+        case 66:
+            if(AutoDefenseTimer === 0 && !AutoDefenseOn){
+                AutoDefenseOn = true;
+                AutoDefenseCountdownFunc();
+                AutoDefense();
+            }
     }
 }
 
@@ -1267,7 +1289,7 @@ function animate() {
        pistol.update();
        handleCollision(pistolBullets);
        pistolBullets.forEach((bullet,index)=>{
-        bullet.update();
+       bullet.update();
         if (bullet.position.y > platformHeight-35||bullet.position.x > canvas.width||bullet.position.x < 0) {
             pistolBullets.splice(index,1);      //if bullets go off frame, remove bullet
         }
@@ -1312,8 +1334,8 @@ function animate() {
     }
     if(temporaryHealthBar.length === 1){
         temporaryHealthBar[0].update();
-        if(temporaryHealthBar[0].width2 <= 0)
-            temporaryHealthBar.pop();
+        if(temporaryHealthBar[0].width2 <= 0){
+            temporaryHealthBar.pop(); }
     }
     healthBar.update({ x: survivor.position.x, y: survivor.position.y });
     handlePowerUps();
@@ -1322,7 +1344,14 @@ function animate() {
     if(jetpackOn)
         jetpack.lift();
     
-    if(bulletsLeft === 0){
+    if(bigBlocks.length === 0){ //auto-defense disabled when there are no blocks
+        document.querySelector('.autoDefense').style.visibility = 'hidden';
+        enableText2.style.visibility = 'hidden';
+        timer2.style.visibility = 'hidden';
+        AutoDefenseCountdownBox.style.visibility = 'hidden';
+    }
+
+    if(bulletsLeft === 0){ //game over when bullets are zero
         handleGameOver();
         setTimeout(()=>{alert('No Bullets Left');},1500);
     }
@@ -1340,7 +1369,7 @@ function handleCollision(bullets){
     });
         for(let i=0;i<zombies.length;i++){
             if(isColliding(bullet,zombies[i])){
-                zombies[i].takeDamage();
+                zombies[i].takeDamage('bullet');
                 if(zombies[i].facing === 'right')
                     zombies[i].position.x -= 7;
                 else
@@ -1675,13 +1704,13 @@ function jetpackCountdownFunc(){
         if(jetpackTimer > 0){
             if(!gamePaused){
             jetpackTimer--;
-            document.querySelector('.timer').innerText = `${jetpackTimer}`;
+            timer1.innerText = `${jetpackTimer}`;
             }
         }
         else{
-            document.querySelector('.jetpackBox h1').style.visibility = 'hidden';
-            timer.style.visibility = 'hidden';
-            enableText.style.visibility = 'visible';
+            document.querySelector('.jetpack h1').style.visibility = 'hidden';
+            timer1.style.visibility = 'hidden';
+            enableText1.style.visibility = 'visible';
             clearInterval(jetpackId1);
         }
     },1000);
@@ -1690,16 +1719,16 @@ function jetpackCountdownFunc(){
     let jetpackId2 = setInterval(()=>{
         if(jetpackCountdown > 0){
             if(!gamePaused){
-                enableText.style.visibility ='hidden';
+                enableText1.style.visibility ='hidden';
                 jetpackCountdownBox.style.visibility = 'visible';
                 jetpackCountdownBox.innerText = `${jetpackCountdown}`;
                 jetpackCountdown--;
             }
         }
         else{
-            jetpackTimer = 61;
-            document.querySelector('.jetpackBox h1').style.visibility = 'visible';
-            timer.style.visibility = 'visible';
+            jetpackTimer = 76;
+            document.querySelector('.jetpack h1').style.visibility = 'visible';
+            timer1.style.visibility = 'visible';
             jetpackCountdownBox.style.visibility = 'hidden';
             jetpackCountdown = 10;
             jetpackOn = false;
@@ -1707,6 +1736,69 @@ function jetpackCountdownFunc(){
             jetpackCountdownFunc();
         }
     },1000);
+  }
+}
+
+function AutoDefenseCountdownFunc(){
+    if(!AutoDefenseOn){
+        let AutoDefenseId1 = setInterval(()=>{
+            if(AutoDefenseTimer > 0){
+                if(!gamePaused){
+                AutoDefenseTimer--;
+                timer2.innerText = `${AutoDefenseTimer}`;
+                }
+            }
+            else{
+                document.querySelector('.autoDefense h1').style.visibility = 'hidden';
+                timer2.style.visibility = 'hidden';
+                enableText2.style.visibility = 'visible';
+                clearInterval(AutoDefenseId1);
+            }
+        },1000);
+      }
+    else{
+        let AutoDefenseId2 = setInterval(()=>{
+            if(AutoDefenseCountdown > 0){
+                if(!gamePaused){
+                    enableText2.style.visibility ='hidden';
+                    AutoDefenseCountdownBox.style.visibility = 'visible';
+                    AutoDefenseCountdownBox.innerText = `${AutoDefenseCountdown}`;
+                    AutoDefenseCountdown--;
+                }
+            }
+            else{ 
+                AutoDefenseTimer = 61;
+                document.querySelector('.autoDefense h1').style.visibility = 'visible';
+                timer2.style.visibility = 'visible';
+                AutoDefenseCountdownBox.style.visibility = 'hidden';
+                AutoDefenseCountdown = 10;
+                AutoDefenseOn = false;
+                clearInterval(AutoDefenseId2);
+                AutoDefenseCountdownFunc();
+            }
+        },1000);
+    }
+}
+
+function AutoDefense(){
+    if(AutoDefenseOn){
+        let id = setInterval(()=>{
+            bigBlocks.forEach((block)=>{
+                for(let i=0; i< zombies.length; i++){
+                    if(isColliding(zombies[i],block)){
+                        zombies[i].takeDamage('autodefense');
+                        if(zombies[i].facing === 'right')
+                            zombies[i].position.x -= 5;
+                        else
+                            zombies[i].position.x += 5;
+                    }
+                }
+            });
+        },2500);
+
+        setTimeout(()=>{
+            clearInterval(id);
+        },10000);
   }
 }
 
@@ -1730,7 +1822,7 @@ function placeElements(){
 function starSound(){
     const audio = new Audio();
     audio.src = '../sounds/star.mp3';
-    audio.volume = 0.9;
+    audio.volume = 0.15;
     audio.play();
 }
 
@@ -1788,6 +1880,7 @@ drawZombies(passThroughZombiesNumber,passThroughZombies,PassThroughZombies);
 animate();
 placeElements();
 jetpackCountdownFunc();
+AutoDefenseCountdownFunc();
 setInterval(zombieBlockDestroy,2000);
 setInterval(zombieSurvivorAttack,1500);
 switchWeapon();

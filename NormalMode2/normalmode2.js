@@ -883,7 +883,7 @@ function placeElements(){
 function starSound(){
     const audio = new Audio();
     audio.src = '../sounds/star.mp3';
-    audio.volume = 0.9;
+    audio.volume = 0.15;
     audio.play();
 }
 

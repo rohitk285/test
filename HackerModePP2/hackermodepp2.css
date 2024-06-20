@@ -16,54 +16,65 @@ canvas{
 }
 .jetpackBox{
     position: absolute;
-    background-color: #1a213098;
-    height: 150px;
+    background-color: transparent;
+    height: 190px;
     width: 230px;
-    border-radius: 8px;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: space-between;
     align-items: center;
 }
-.jetpackBox h1{
+.jetpack,.autoDefense{
+    height: 92px;
+    width: 230px;
+    border-radius: 8px;
+    background-color: #1a213098;
+}
+.jetpack h1,.autoDefense h1{
     font-family: "VT323", monospace;
     font-weight: 600;
     font-style: normal;
-    font-size: 32px;
+    font-size: 30px;
     text-align: center;
     color:#83b5ffe6;
-    transform: translateY(-5px);
+    transform: translateY(-25px);
     visibility: visible;
 }
-.jetpackBox .timer{
+.autoDefense h1{
+    font-size: 28px;
+}
+.jetpack .timer1,.autoDefense .timer2{
     font-family: "VT323", monospace;
     font-weight: 600;
     font-style: normal;
-    font-size: 65px;
+    font-size: 48px;
     text-align: center;
     color:#83b5ffe6;
-    transform: translateY(-90px);
+    transform: translateY(-82px);
     visibility: visible;
 }
-.jetpackBox .enableText{
+.autoDefense .timer2{
+    transform: translateY(-78px);
+}
+.jetpack .enableText1,.autoDefense .enableText2{
     font-family: "VT323", monospace;
     font-weight: 600;
     font-style: normal;
     padding: 4px;
-    font-size: 35px;
+    font-size: 28px;
     text-align: center;
     color:#83b5ffe6;
-    transform: translateY(-305px);
+    transform: translateY(-210px);
     visibility: hidden;
 }
-.jetpackCountdown{
+.jetpackCountdown,.autoDefenseCountdown{
     font-family: "VT323", monospace;
     font-weight: 600;
     font-style: normal;
     text-align: center;
     color:#83b5ffe6;
-    font-size: 120px;
-    transform: translateY(-430px);
+    font-size: 100px;
+    transform: translateY(-320px);
     visibility: hidden;
 }
 .scoreBox{
