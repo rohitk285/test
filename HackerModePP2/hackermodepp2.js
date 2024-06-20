@@ -1159,6 +1159,7 @@ function handleKeyDown(event) {
                 AutoDefenseOn = true;
                 AutoDefenseCountdownFunc();
                 AutoDefense();
+                autoDefenseSound();
             }
     }
 }
@@ -1870,6 +1871,13 @@ function jetpackSound(){
     const audio = new Audio();
     audio.src = '../sounds/jetpackSound.mp3';
     audio.volume = 0.5;
+    audio.play();
+}
+
+function autoDefenseSound(){
+    const audio = new Audio();
+    audio.src = '../sounds/AutoDefense.mp3';
+    audio.volume = 0.2;
     audio.play();
 }
 
