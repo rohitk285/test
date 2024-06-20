@@ -26,7 +26,7 @@ const finalScore=document.querySelector('.gameOverBox p');
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
 
-canvas.addEventListener('mousemove', handleMouseMove);
+canvas.addEventListener('mousemove', handleMouseMove); //Event Listeners
 canvas.addEventListener('click',handleBulletShoot);
 window.addEventListener('mousedown', handleMouseDown);
 window.addEventListener('mouseup', handleMouseUp);
@@ -62,7 +62,7 @@ window.addEventListener('resize', function () {
 
 let keys = { left: false, right: false, up: false};
 
-class Platform {
+class Platform {  //to draw Platform/Ground
     constructor({ x, y, image }) {
         this.position = { x: x, y: y };
         this.image = image;
@@ -87,7 +87,7 @@ const platforms = [
 
 const platformHeight = platforms[0].position.y;
 
-class BackgroundObject{
+class BackgroundObject{ // to draw night bg
     constructor({x,y,image}){
         this.position={x:x , y:y};
         this.image=image;
@@ -101,7 +101,7 @@ class BackgroundObject{
 
 const bgObjects=[new BackgroundObject({x:-1,y:-1,image:createImage('../images1/nightBg.png')})];
 
-class Survivor {
+class Survivor { //to control survivor characteristics
     constructor() {
         this.width = 85;
         this.height = 155;
@@ -132,7 +132,7 @@ class Survivor {
     update() {
         this.count++;
         if(this.count % 3 === 0){
-            this.count = 0;
+            this.count = 0;       //Reducing frames per sec for survivor movement
             this.frame++;
         }
         if(this.frame > 10){
@@ -144,10 +144,10 @@ class Survivor {
             this.facing = 'left';
         // update position
         this.position.y += this.velocity.y;
-        this.position.x += this.velocity.x;
+        this.position.x += this.velocity.x;    
 
         if(this.position.y+this.height+this.velocity.y<=platformHeight)
-            this.velocity.y += gravity;
+            this.velocity.y += gravity;  //Gravity for survivor
         else{
             this.velocity.y=0;
             this.jumpCount = 0;
@@ -156,7 +156,7 @@ class Survivor {
         if (keys.right) 
             this.velocity.x = 5;
         else if (keys.left) 
-            this.velocity.x = -5;
+            this.velocity.x = -5;   //Left right movement
         else 
             this.velocity.x = 0;
 
@@ -174,6 +174,7 @@ class Survivor {
             if(keys.left)
                 this.velocity.x = 0;
         }
+        // collision Detection for Survivor and blocks
         bigBlocks.forEach(block => {
             if (
                 this.position.x + this.width >= block.position.x &&
@@ -204,7 +205,7 @@ class Survivor {
 
 const survivor = new Survivor();
 
-class HealthBar {
+class HealthBar { // Health bar of survivor
     constructor() {
         this.position = { x:survivor.position.x + 2 , y:survivor.position.y - 15 };
         this.width = 80;
@@ -228,7 +229,7 @@ class HealthBar {
         c.fillRect(this.position.x, this.position.y, this.width2, this.height);
     }
     update({ x, y }) {
-        this.position.x = x+2;
+        this.position.x = x+2; //update position
         this.position.y = y-15;
         this.drawHealth();
         this.drawHealth2();
@@ -239,7 +240,7 @@ const healthBar = new HealthBar();
 
 let zombies = [];
 
-class Zombies{
+class Zombies{ //to draw zombies
     constructor({x,height,y}){
         this.position = {x:x , y:y};
         this.velocity = {x:0 , y:0};
@@ -255,7 +256,7 @@ class Zombies{
         else
             this.facing = 'right';
     }
-    takeDamage(){
+    takeDamage(){  //zombie damage
            this.healthWidth2 -= 15;
 
         if(this.healthWidth2 <= 0){
@@ -308,7 +309,7 @@ class Zombies{
             this.velocity.x = -this.velocityIncrease; //zombie horizontal velocity
         else
             this.velocity.x = 0;
-
+            //zombie & block collision
             bigBlocks.forEach(block => {
                 if (
                     this.position.x + this.width >= block.position.x &&
@@ -331,7 +332,7 @@ class Zombies{
     }
 }
 
-function drawZombies(number,array,Class){
+function drawZombies(number,array,Class){ // to draw zombies
     for(let i=0;i<number;i++){
         let height = 88 + Math.floor(Math.random()*12);
         array.push(new Class({x:Math.floor(Math.random()*20),
@@ -344,7 +345,7 @@ function drawZombies(number,array,Class){
 
 const bigBlock=createImage('../images1/woodenBoxBig.png');
 
-class BigBlocks{
+class BigBlocks{  //Defense blocks
     constructor({x,y,image}) {
         this.position = { x: x, y: y };
         this.velocity = {x: 0, y: 2};
@@ -373,14 +374,14 @@ class BigBlocks{
         c.fillRect(this.position.x+5,this.position.y-12,this.healthWidth2,this.healthHeight);
     }
     update(){
-        this.position.y += this.velocity.y;
+        this.position.y += this.velocity.y; //update position
         this.position.x += this.velocity.x;
 
         if(this.position.y+this.height+this.velocity.y<=platformHeight)
-            this.velocity.y += gravity;
+            this.velocity.y += gravity; //gravity for blocks
         else
             this.velocity.y=0;
-
+        // to control gravity for blocks
         bigBlocks.forEach((block)=>{
             if(block !== this && this.position.y + this.height <= block.position.y &&
                 this.position.y + this.height + this.velocity.y >= block.position.y &&
@@ -408,7 +409,7 @@ let bigBlocks=[new BigBlocks({x:385 , y:platformHeight-bigBlockSize, image:bigBl
     new BigBlocks({x:890 , y:platformHeight-bigBlockSize, image:bigBlock})
 ];
 
-class Pistol{
+class Pistol{ // Gun
     constructor(survivor) {
         this.survivor = survivor;
         this.width = 60;
@@ -426,7 +427,7 @@ class Pistol{
         c.save();
         c.translate(this.survivor.position.x + this.survivor.width/2,
             this.survivor.position.y + this.survivor.height/1.6);
-        c.rotate(angle);
+        c.rotate(angle); //Gun rotation 
         c.drawImage(this.image, 0, 0, 512, 332, 0, -this.height/2, this.width, this.height);
         c.restore();
     }
@@ -441,7 +442,7 @@ const pistol = new Pistol(survivor);
 
 const pistolBulletImage = createImage('../images1/pistolBullet.png');
 
-class PistolBullet{
+class PistolBullet{  // Bullets
     constructor(pistol,survivor,image){
         this.survivor=survivor;
         this.gun=pistol;
@@ -475,10 +476,10 @@ class PistolBullet{
         this.shot = true;
         const angle = Math.atan2(mousePos.y - (this.survivor.position.y + this.survivor.height/1.6),
             mousePos.x - (this.survivor.position.x + this.survivor.width / 2));
-
-        this.velocity.x = Math.cos(angle)*bulletNetVelocity;   //Projectile motion formula
+        //Projectile motion formula
+        this.velocity.x = Math.cos(angle)*bulletNetVelocity;
         this.velocity.y = Math.sin(angle)*bulletNetVelocity;                     
-        
+        //Gun tip coordinates
         let tipGunX = this.gun.position.x + this.gun.width*Math.cos(angle);
         let tipGunY = this.gun.position.y + this.gun.width*Math.sin(angle);
 
@@ -496,7 +497,7 @@ class PistolBullet{
 
 let pistolBullets = [];
 
-class ProjectionLine{
+class ProjectionLine{ //projection lines for aim
     constructor(gun,survivor){
         this.gun=gun;
         this.survivor = survivor;
@@ -521,7 +522,7 @@ class ProjectionLine{
             tipGunY = this.gun.position.y + this.gun.width*Math.sin(angle) + 14;
         else
             tipGunY = this.gun.position.y + this.gun.width*Math.sin(angle);
-
+        //to place dots in the projection lines
         for(let i=0; i<500; i+=3){
             let x = tipGunX + this.velocity*Math.cos(angle)*i;
             let y = tipGunY + this.velocity*Math.sin(angle)*i + 0.5*gravityBullet*i*i;
@@ -538,7 +539,7 @@ class ProjectionLine{
 
 let projectionLine;
 
-function handleBulletShoot() {
+function handleBulletShoot() {  // to handle shooting of bullets
     if (bulletsLeft > 0 && bulletLoaded) {
         let newBullet;
         newBullet = new PistolBullet(pistol, survivor, pistolBulletImage);
@@ -561,7 +562,7 @@ function handleMouseUp(){
     isMouseDown = false;
 }
 
-function handleKeyDown(event) {
+function handleKeyDown(event) { //to handle key presses for survivor movement
     let keyCode = event.keyCode;
     switch (keyCode) {
         case 37:
@@ -599,13 +600,13 @@ function handleKeyUp(event) {
     }
 }
 
-function handleMouseMove(event) {
+function handleMouseMove(event) { //to handle mouse movement and coordinates
     const rect = canvas.getBoundingClientRect();
     mousePos.x = event.clientX - rect.left;
     mousePos.y = event.clientY - rect.top;
 }
 
-function animate() {
+function animate() { //to animate the game
     c.clearRect(0, 0, canvas.width, canvas.height);
     bgObjects.forEach(obj => obj.draw());
     platforms.forEach(platform=>platform.update());
@@ -614,7 +615,7 @@ function animate() {
     bgObjects.forEach(obj => obj.draw());
     platforms.forEach(platform=>platform.update());
 
-    bigBlocks.forEach((block,index)=>{
+    bigBlocks.forEach((block,index)=>{  //remove block if its health is zero
         if(block.healthWidth2<=0)
             bigBlocks.splice(index,1);
         block.update();
@@ -656,7 +657,7 @@ function animate() {
          pistolBullets.splice(index,1);      //if bullets go off frame, remove bullet
      }
  });
-
+    //update projection line
     if(isMouseDown && bulletsLeft > 0) {
         projectionLine = new ProjectionLine(pistol, survivor);
         projectionLine.update();  
@@ -664,7 +665,7 @@ function animate() {
     
     healthBar.update({ x: survivor.position.x, y: survivor.position.y });
 
-    if(bulletsLeft === 0){
+    if(bulletsLeft === 0){  //game over if zero bullets are left
         handleGameOver();
         setTimeout(()=>{alert('No Bullets Left');},1500);
     }
@@ -673,7 +674,7 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
-function handleCollision(bullets){
+function handleCollision(bullets){ //handles collision b/w blocks,zombie & bullet
     bullets.forEach((bullet,bulletIndex)=>{
         bigBlocks.forEach((block)=>{
             if(isColliding(bullet, block)){
@@ -695,7 +696,7 @@ function handleCollision(bullets){
     });
 }
 
-function zombieBlockDestroy(){
+function zombieBlockDestroy(){ //handles blocks getting destroyed by zombie
     if(!gamePaused){
     bigBlocks.forEach((block)=>{
         for(let i=0;i<zombies.length;i++){
@@ -709,7 +710,7 @@ function zombieBlockDestroy(){
   }
 }
 
-function zombieSurvivorAttack(){
+function zombieSurvivorAttack(){ //handles survivor getting attacked by zombie
     if(!gamePaused){
     for(let i=0;i<zombies.length;i++){
         if(isColliding(zombies[i],survivor)){
@@ -726,7 +727,7 @@ function createImage(imageSrc) {
     return image;
 }
 
-function pauseFunc(){
+function pauseFunc(){ //handles Pause
     pauseButton.addEventListener('click',()=>{
         blackScreen1.style.visibility='visible';
         gamePaused=true;
@@ -737,7 +738,7 @@ function pauseFunc(){
     })
 }
 
-function startGame(){
+function startGame(){ //handles Start game
     startButton.addEventListener('click',()=>{
         if(usernameRestrict() === 'hidden'){
             blackScreen3.style.visibility='hidden';
@@ -752,7 +753,7 @@ function startGame(){
     });
 }
 
-function isColliding(bullet, block) {
+function isColliding(bullet, block) { //Checks for collision
     return (
         bullet.position.x < block.position.x + block.width &&
         bullet.position.x + bullet.width > block.position.x &&
@@ -761,7 +762,7 @@ function isColliding(bullet, block) {
     );
 }
 
-function countdownFunc(){
+function countdownFunc(){ //handles countdown
     if(!isGameOver){
     let secCount=4;
     blackScreen2.style.visibility='visible';
@@ -798,7 +799,7 @@ function handleScoreBox(){
     zombiesKilledText.innerText = `Zombies Killed : ${zombiesKilled}`;
 }
 
-function handleGameOver(){
+function handleGameOver(){ //handles if game is over
     gamePaused = true;
     isGameOver = true;
     let isAppended = false;
@@ -809,6 +810,7 @@ function handleGameOver(){
        JSON.parse(localStorage.getItem('scores')).length > 0
     ){
         let array = JSON.parse(localStorage.getItem('scores'));
+        //places username and score by sorting
         for(let i=0;i<array.length;i++){
             let n = array[i].score;
             if(i===0){
@@ -839,6 +841,7 @@ function handleGameOver(){
         localStorage.setItem('scores',JSON.stringify([{username:username.value,
              score:score}]));
     }
+    //using local storage to control leaderboard
 }
 
 function displayLeaderBoard(){

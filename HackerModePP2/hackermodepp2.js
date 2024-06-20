@@ -40,7 +40,7 @@ const finalScore=document.querySelector('.gameOverBox p');
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
 
-canvas.addEventListener('mousemove', handleMouseMove);
+canvas.addEventListener('mousemove', handleMouseMove); //Event Listeners
 canvas.addEventListener('click',handleBulletShoot);
 window.addEventListener('mousedown', handleMouseDown);
 window.addEventListener('mouseup', handleMouseUp);
@@ -91,7 +91,7 @@ window.addEventListener('resize', function () {
 
 let keys = { left: false, right: false, up: false};
 
-class Platform {
+class Platform {  //to draw Platform/Ground
     constructor({ x, y, image }) {
         this.position = { x: x, y: y };
         this.image = image;
@@ -116,7 +116,7 @@ const platforms = [
 
 const platformHeight = platforms[0].position.y;
 
-class BackgroundObject{
+class BackgroundObject{  // to draw night bg
     constructor({x,y,image}){
         this.position={x:x , y:y};
         this.image=image;
@@ -130,8 +130,8 @@ class BackgroundObject{
 
 const bgObjects=[new BackgroundObject({x:-1,y:-1,image:createImage('../images1/nightBg.png')})];
 
-class Survivor {
-    constructor() {
+class Survivor { //to control survivor characteristics
+    constructor() { 
         this.width = 85;
         this.height = 155;
         this.position = { x: canvas.width/2-20, y:-this.height };
@@ -142,6 +142,7 @@ class Survivor {
         this.facing = 'right';
     }
     draw() {
+        //Sprites & animation for survivor
         if(this.velocity.x === 0 || jetpackOn){
             if(this.facing === 'right')
                 this.image = createImage('../images2/survivorIdle/idleRight.png');
@@ -160,7 +161,7 @@ class Survivor {
     }
     update() {
         this.count++;
-        if(this.count % 3 === 0){
+        if(this.count % 3 === 0){  //Reducing frames per sec for survivor movement
             this.count = 0;
             this.frame++;
         }
@@ -176,7 +177,7 @@ class Survivor {
         this.position.x += this.velocity.x;
 
         if(this.position.y+this.height+this.velocity.y<=platformHeight)
-            this.velocity.y += gravitySurvivor;
+            this.velocity.y += gravitySurvivor; //gravity
         else{
             this.velocity.y=0;
             this.jumpCount = 0;
@@ -185,13 +186,13 @@ class Survivor {
         if (keys.right) 
             this.velocity.x = 5;
         else if (keys.left) 
-            this.velocity.x = -5;
+            this.velocity.x = -5;        //Left right movement
         else 
             this.velocity.x = 0;
 
         // jumping
         if(keys.up && this.jumpCount < 2 && survivor.position.y > 0){ //to prevent survivor from jumping more
-            this.velocity.y=-12;            //than twice
+            this.velocity.y=-12;                                      //than twice
             this.jumpCount++;
         }
     
@@ -203,6 +204,7 @@ class Survivor {
             if(keys.left)
                 this.velocity.x = 0;
         }
+        // collision Detection for Survivor and blocks
         bigBlocks.forEach(block => {
             if (
                 this.position.x + this.width >= block.position.x &&
@@ -233,7 +235,7 @@ class Survivor {
 
 const survivor = new Survivor();
 
-class HealthBar{
+class HealthBar{ // Health bar of survivor
     constructor() {
         this.position = { x:survivor.position.x + 2 , y:survivor.position.y - 15 };
         this.width = 80;
@@ -257,7 +259,7 @@ class HealthBar{
         c.fillRect(this.position.x, this.position.y, this.width2, this.height);
     }
     update({x, y}) {
-        this.position.x = x+2;
+        this.position.x = x+2;  //update position
         this.position.y = y-15;
         this.drawHealth();
         this.drawHealth2();
@@ -266,7 +268,7 @@ class HealthBar{
 
 const healthBar = new HealthBar();
 
-class TemporaryHealthBar{
+class TemporaryHealthBar{   //Temporary immunity power up
     constructor(){
         this.position = { x:survivor.position.x + 2 , y:survivor.position.y - 26};
         this.width = 80;
@@ -288,7 +290,7 @@ class TemporaryHealthBar{
         c.fillRect(this.position.x, this.position.y, this.width2, this.height);
     }
     update(){
-        this.position.x = survivor.position.x + 2;
+        this.position.x = survivor.position.x + 2;  //update position
         this.position.y = survivor.position.y - 26;
         this.drawHealth();
         this.drawHealth2();
@@ -297,7 +299,7 @@ class TemporaryHealthBar{
 
 let temporaryHealthBar = [];
 
-class Jetpack{
+class Jetpack{  //handles jetpack
     constructor(){
         this.position = {x: survivor.position.x-4, y:survivor.position.y + 75};
         this.height = 50;
@@ -321,7 +323,7 @@ class Jetpack{
         }
     } 
     update(){
-        gravitySurvivor = jetpackOn ? 0 : 0.5;
+        gravitySurvivor = jetpackOn ? 0 : 0.5; //if jetpack is on, no gravity applied
         this.position.y = survivor.position.y + 82;
         this.draw(); 
     }
@@ -331,7 +333,7 @@ const jetpack = new Jetpack();
 
 let zombies = [];
 
-class Zombies{
+class Zombies{ //to draw zombies
     constructor({x,height,y}){
         this.position = {x:x , y:y};
         this.velocity = {x:0 , y:0};
@@ -366,6 +368,7 @@ class Zombies{
         }
     }
     draw(){
+        //Sprites & animation for zombie
         if(this.velocity.x > 0){
             this.image = createImage(`../images2/zombieGirlWalkRight/walk${this.frame}.png`);
             c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
@@ -395,7 +398,7 @@ class Zombies{
     }
     update(){
         this.count++;
-        if(this.count % 4 === 0){
+        if(this.count % 4 === 0){  //reducing fps for zombies
             this.count=0;
             this.frame++;
         }
@@ -417,7 +420,7 @@ class Zombies{
             this.velocity.x = -this.velocityIncrease; //zombie horizontal velocity
         else
             this.velocity.x = 0;
-
+            //collision detection for block and zombie
             bigBlocks.forEach(block => {
                 if (
                     this.position.x + this.width >= block.position.x &&
@@ -442,7 +445,7 @@ class Zombies{
 
 let climberZombies = [];
 
-class ClimberZombies{
+class ClimberZombies{ //to draw climber zombies
     constructor({x,height,y}){
         this.position = {x:x , y:y};
         this.velocity = {x:0 , y:0};
@@ -473,6 +476,7 @@ class ClimberZombies{
         }
     }
     draw(){
+        //Sprites & animations for zombies
         if(this.velocity.x > 0){
             this.image = createImage(`../images3/zombieBoyWalkRight/walk${this.frame}.png`);
             c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
@@ -502,7 +506,7 @@ class ClimberZombies{
     }
     update(){
         this.count++;
-        if(this.count % 4 === 0){
+        if(this.count % 4 === 0){  //reducing fps
             this.count = 0;
             this.frame++;
         }
@@ -568,7 +572,7 @@ class ClimberZombies{
 
 let passThroughZombies = [];
 
-class PassThroughZombies{
+class PassThroughZombies{  //to draw pass through zombies
     constructor({x,height,y}){
         this.position = {x:x , y:y};
         this.velocity = {x:0 , y:0};
@@ -600,6 +604,7 @@ class PassThroughZombies{
         }
     }
     draw(){
+        //Sprites and animations for zombies
         if(this.velocity.x > 0){
             this.image = createImage(`../images1/passZombieWalkRight/walk${this.frame}.png`);
             c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
@@ -629,7 +634,7 @@ class PassThroughZombies{
     }
     update(){
         this.count++;
-        if(this.count % 6 === 0){
+        if(this.count % 6 === 0){  //reducing fps
             this.count=0;
             this.frame++;
         }
@@ -658,7 +663,7 @@ class PassThroughZombies{
     }
 }
 
-function drawZombies(number,array,Class){
+function drawZombies(number,array,Class){  //handles drawing of zombie
     for(let i=0;i<number;i++){
         let height = 88 + Math.floor(Math.random()*12);
         array.push(new Class({x:Math.floor(Math.random()*20),
@@ -671,7 +676,7 @@ function drawZombies(number,array,Class){
 
 const bigBlock=createImage('../images1/woodenBoxBig.png');
 
-class BigBlocks{
+class BigBlocks{ //to draw blocks
     constructor({x,y,image}) {
         this.position = { x: x, y: y };
         this.velocity = {x: 0, y: 2};
@@ -709,10 +714,10 @@ class BigBlocks{
         this.position.x += this.velocity.x;
 
         if(this.position.y+this.height+this.velocity.y<=platformHeight)
-            this.velocity.y += gravity;
+            this.velocity.y += gravity; //Gravity for big blocks
         else
             this.velocity.y=0;
-
+        //handles gravity for the blocks
         bigBlocks.forEach((block)=>{
             if(block !== this && this.position.y + this.height <= block.position.y &&
                 this.position.y + this.height + this.velocity.y >= block.position.y &&
@@ -740,7 +745,7 @@ let bigBlocks=[new BigBlocks({x:385 , y:platformHeight-bigBlockSize, image:bigBl
     new BigBlocks({x:890 , y:platformHeight-bigBlockSize, image:bigBlock})
 ];
 
-class Pistol{
+class Pistol{  //draws pistol
     constructor(survivor) {
         this.survivor = survivor;
         this.width = 60;
@@ -765,14 +770,14 @@ class Pistol{
             c.translate(-this.recoilDistance*Math.cos(angle) , 
             -this.recoilDistance*Math.sin(angle));
         }
-        c.rotate(angle);
+        c.rotate(angle); //pistol rotation
         c.drawImage(this.image, 0, 0, 512, 332, 0, -this.height/2, this.width, this.height);
         c.restore();
     }
     update() {
         this.position.x = this.survivor.position.x + this.survivor.width/2;
         this.position.y = this.survivor.position.y + this.survivor.height/1.6 - this.height / 2;
-        if(isRecoil){
+        if(isRecoil){  //controls recoil
             this.recoilTimeCount++;
             if(this.recoilTimeCount > this.recoilTime){
                 isRecoil = false;
@@ -785,7 +790,7 @@ class Pistol{
 
 const pistol = new Pistol(survivor);
 
-class Ak47{
+class Ak47{ //draws ak47
     constructor(survivor) {
         this.survivor = survivor;
         this.width = 80;
@@ -810,14 +815,14 @@ class Ak47{
             c.translate(-this.recoilDistance*Math.cos(angle) , 
             -this.recoilDistance*Math.sin(angle));
         }
-        c.rotate(angle);
+        c.rotate(angle); //ak47 rotation
         c.drawImage(this.image, 0, 0, 459, 117, 0, -this.height/2, this.width, this.height);
         c.restore();
     }
     update() {
         this.position.x = this.survivor.position.x + this.survivor.width/2;
         this.position.y = this.survivor.position.y + this.survivor.height/1.6 - this.height/2;
-        if(isRecoil){
+        if(isRecoil){  //controls recoil
             this.recoilTimeCount++;
             if(this.recoilTimeCount > this.recoilTime){
                 isRecoil = false;
@@ -830,7 +835,7 @@ class Ak47{
 
 const ak47 = new Ak47(survivor);
 
-class Sniper{
+class Sniper{ //draws sniper
     constructor(survivor) {
         this.survivor = survivor;
         this.width = 105;
@@ -851,18 +856,18 @@ class Sniper{
         c.save();
         c.translate(this.survivor.position.x + this.survivor.width/2,
             this.survivor.position.y + this.survivor.height/1.6);
-        if(isRecoil){
+        if(isRecoil){ 
             c.translate(-this.recoilDistance*Math.cos(angle) , 
             -this.recoilDistance*Math.sin(angle));
         }
-        c.rotate(angle);
+        c.rotate(angle); //sniper rotation
         c.drawImage(this.image, 0, 0, 459, 117, 0, -this.height/2, this.width, this.height);
         c.restore();
     }
     update() {
         this.position.x = this.survivor.position.x + this.survivor.width/2;
         this.position.y = this.survivor.position.y + this.survivor.height/1.6 - this.height/2;
-        if(isRecoil){
+        if(isRecoil){ //controls recoil
             this.recoilTimeCount++;
             if(this.recoilTimeCount > this.recoilTime){
                 isRecoil = false;
@@ -879,7 +884,7 @@ const pistolBulletImage = createImage('../images1/pistolBullet.png');
 const ak47BulletImage = createImage('../images1/ak47Bullet.png');
 const sniperBulletImage = createImage('../images1/sniperBullet.png');
 
-class PistolBullet{
+class PistolBullet{ //draws pistol bullet
     constructor(pistol,survivor,image){
         this.survivor=survivor;
         this.gun=pistol;
@@ -914,10 +919,10 @@ class PistolBullet{
         this.shot = true;
         const angle = Math.atan2(mousePos.y - (this.survivor.position.y + this.survivor.height/1.6),
             mousePos.x - (this.survivor.position.x + this.survivor.width / 2));
-
-        this.velocity.x = Math.cos(angle)*bulletNetVelocity;   //Projectile motion formula
+        //Projectile motion formula
+        this.velocity.x = Math.cos(angle)*bulletNetVelocity;
         this.velocity.y = Math.sin(angle)*bulletNetVelocity;                     
-        
+        //Gun tip coordinates
         let tipGunX = this.gun.position.x + this.gun.width*Math.cos(angle);
         let tipGunY = this.gun.position.y + this.gun.width*Math.sin(angle);
 
@@ -935,7 +940,7 @@ class PistolBullet{
 
 let pistolBullets = [];
 
-class Ak47Bullet{
+class Ak47Bullet{  //draws bullets
     constructor(ak47,survivor,image){
         this.survivor=survivor;
         this.gun=ak47;
@@ -970,10 +975,10 @@ class Ak47Bullet{
         this.shot = true;
         const angle = Math.atan2(mousePos.y - (this.survivor.position.y + this.survivor.height/1.6),
             mousePos.x - (this.survivor.position.x + this.survivor.width/2));
-
-        this.velocity.x = Math.cos(angle)*bulletNetVelocity;   //Projectile motion formula
+        //Projectile motion formula
+        this.velocity.x = Math.cos(angle)*bulletNetVelocity;
         this.velocity.y = Math.sin(angle)*bulletNetVelocity;                     
-        
+        //Gun tip coordinates
         let tipGunX = this.gun.position.x + this.gun.width*Math.cos(angle);
         let tipGunY = this.gun.position.y + this.gun.width*Math.sin(angle);
 
@@ -991,7 +996,7 @@ class Ak47Bullet{
 
 let ak47Bullets = [];
 
-class SniperBullet{
+class SniperBullet{ //draws bullets
     constructor(sniper,survivor,image){
         this.survivor=survivor;
         this.gun=sniper;
@@ -1026,10 +1031,10 @@ class SniperBullet{
         this.shot = true;
         const angle = Math.atan2(mousePos.y - (this.survivor.position.y + this.survivor.height/1.6),
             mousePos.x - (this.survivor.position.x + this.survivor.width / 2));
-
-        this.velocity.x = Math.cos(angle)*bulletNetVelocity;   //Projectile motion formula
+        //Projectile motion formula
+        this.velocity.x = Math.cos(angle)*bulletNetVelocity;
         this.velocity.y = Math.sin(angle)*bulletNetVelocity;                     
-        
+        //Gun tip coordinates
         let tipGunX = this.gun.position.x + this.gun.width*Math.cos(angle);
         let tipGunY = this.gun.position.y + this.gun.width*Math.sin(angle);
 
@@ -1047,7 +1052,7 @@ class SniperBullet{
 
 let sniperBullets = [];
 
-class ProjectionLine{
+class ProjectionLine{  //draws proj lines for aim
     constructor(gun,survivor){
         this.gun=gun;
         this.survivor = survivor;
@@ -1072,7 +1077,7 @@ class ProjectionLine{
             tipGunY = this.gun.position.y + this.gun.width*Math.sin(angle) + 14;
         else
             tipGunY = this.gun.position.y + this.gun.width*Math.sin(angle);
-
+        //projectile motion formula
         for(let i=0; i<500; i+=3){
             let x = tipGunX + this.velocity*Math.cos(angle)*i;
             let y = tipGunY + this.velocity*Math.sin(angle)*i + 0.5*gravityBullet*i*i;
@@ -1089,7 +1094,7 @@ class ProjectionLine{
 
 let projectionLine;
 
-function handleBulletShoot() {
+function handleBulletShoot() {   //handles shooting of bullets
     if (bulletsLeft > 0 && bulletLoaded) {
         isRecoil = true;
         let newBullet;
@@ -1131,7 +1136,7 @@ function handleMouseUp(){
     isMouseDown = false;
 }
 
-function handleKeyDown(event) {
+function handleKeyDown(event) {   //to handle key presses for survivor movement
     let keyCode = event.keyCode;
     switch (keyCode) {
         case 37:
@@ -1188,7 +1193,7 @@ function handleMouseMove(event) {
     mousePos.y = event.clientY - rect.top;
 }
 
-function animate() {
+function animate() {   //animates the game
     c.clearRect(0, 0, canvas.width, canvas.height);
     bgObjects.forEach(obj => obj.draw());
     platforms.forEach(platform=>platform.update());
@@ -1264,7 +1269,7 @@ function animate() {
     });
 
     if(zombies.length === 0 && climberZombies.length === 0 && 
-    passThroughZombies.length === 0){
+    passThroughZombies.length === 0){  //next round if all zombies killed
         roundNumber++;
         gamePaused = true;
         blackScreen5.style.visibility = 'visible';
@@ -1284,7 +1289,7 @@ function animate() {
         drawZombies(passThroughZombiesNumber,passThroughZombies,PassThroughZombies);
     }
 
-    survivor.update();
+    survivor.update(); //update survivor
 
     if(weapon === 'pistol'){
        pistol.update();
@@ -1422,7 +1427,7 @@ function zombieBlockDestroy(){
   }
 }
 
-function zombieSurvivorAttack(){
+function zombieSurvivorAttack(){ //handles survivor getting attacked by zombie
     if(!gamePaused){
     for(let i=0;i<zombies.length;i++){
         if(isColliding(zombies[i],survivor)){
@@ -1454,7 +1459,7 @@ function zombieSurvivorAttack(){
   }
 }
 
-function handlePowerUps(){
+function handlePowerUps(){ //handles power ups
     if(powerUps < Math.floor(zombiesKilled/10)){
       powerUps++;
       infoText.style.visibility = 'hidden';
@@ -1492,7 +1497,7 @@ function handlePowerUps(){
     }
 }
 
-function increaseFireRate(){
+function increaseFireRate(){  //increases ammunition rate
     if(interval.pistol > 70){
         interval.pistol -= 140;
         RFPistol+=4.2;
@@ -1516,7 +1521,7 @@ function createImage(imageSrc) {
     return image;
 }
 
-function pauseFunc(){
+function pauseFunc(){  //handles Pause
     pauseButton.addEventListener('click',()=>{
         blackScreen1.style.visibility='visible';
         gamePaused=true;
@@ -1545,7 +1550,7 @@ function startGame(){
     });
 }
 
-function isColliding(bullet, block) {
+function isColliding(bullet, block) {  //checks for collision
     return (
         bullet.position.x < block.position.x + block.width &&
         bullet.position.x + bullet.width > block.position.x &&
@@ -1554,7 +1559,7 @@ function isColliding(bullet, block) {
     );
 }
 
-function countdownFunc(){
+function countdownFunc(){  //handles countdown
     if(!isGameOver){
     let secCount=4;
     blackScreen2.style.visibility='visible';
@@ -1591,7 +1596,7 @@ function handleScoreBox(){
     zombiesKilledText.innerText = `Zombies Killed : ${zombiesKilled}`;
 }
 
-function handleGameOver(){
+function handleGameOver(){  //handles game over
     gamePaused = true;
     isGameOver = true;
     let isAppended = false;
@@ -1666,7 +1671,7 @@ function handlePlayAgain(){
     playAgainButton.addEventListener('click',() => {window.location.reload();})
 }
 
-function switchWeapon(){
+function switchWeapon(){  //handles gun/weapon switch
     pistolButton.addEventListener('click',()=>{
         if(sniperBullets.length===0 && ak47Bullets.length===0 && weapon !== 'pistol' &&
             !gamePaused){
@@ -1693,13 +1698,13 @@ function switchWeapon(){
     });
 }
 
-function loadBullet(interval){
+function loadBullet(interval){ //gun cool down time
     setTimeout(()=>{
         bulletLoaded = true;
     },interval);
 }
 
-function jetpackCountdownFunc(){
+function jetpackCountdownFunc(){  //handles countdown for jetpack
     if(!jetpackOn){
     let jetpackId1 = setInterval(()=>{
         if(jetpackTimer > 0){
@@ -1740,7 +1745,7 @@ function jetpackCountdownFunc(){
   }
 }
 
-function AutoDefenseCountdownFunc(){
+function AutoDefenseCountdownFunc(){  //handles countdown for auto defense
     if(!AutoDefenseOn){
         let AutoDefenseId1 = setInterval(()=>{
             if(AutoDefenseTimer > 0){
@@ -1781,7 +1786,7 @@ function AutoDefenseCountdownFunc(){
     }
 }
 
-function AutoDefense(){
+function AutoDefense(){ //initiates auto defense
     if(AutoDefenseOn){
         let id = setInterval(()=>{
             bigBlocks.forEach((block)=>{
